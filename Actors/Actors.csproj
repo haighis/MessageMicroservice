@@ -90,7 +90,7 @@
     <Content Include="licenses\protoc-license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TodoDataModel\DataModel.csproj">
+    <ProjectReference Include="..\DataModel\DataModel.csproj">
       <Project>{1de7e86b-3c82-4d59-873b-3ae785130e19}</Project>
       <Name>DataModel</Name>
     </ProjectReference>
