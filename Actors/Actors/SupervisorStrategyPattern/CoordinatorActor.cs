@@ -21,6 +21,7 @@ namespace Actors.Actors.SupervisorStrategyPattern
             Receive<Message>(msg =>
             {
                 var todoChildActor = LookupOrCreateTodoChildActor(Guid.NewGuid().ToString());
+                Console.WriteLine("CoordinatorActor path " + Self.Path);
                 todoChildActor.Forward(msg);
             });
         }

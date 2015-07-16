@@ -13,7 +13,8 @@ namespace Actors.Actors.SupervisorStrategyPattern
         {
             Receive<Message>(msg =>
             {
-                Console.WriteLine("Message received, I'm going to reddit now.");
+                Console.WriteLine("Child Actr path " + Self.Path);
+                Console.WriteLine(msg.Data);
                 // INSERT TO A DATABASE OR SEND AN EMAIL
             });  
         }

@@ -19,8 +19,8 @@ namespace GroupRouterSystem
         {
             var section = (AkkaConfigurationSection)ConfigurationManager.GetSection("akka");
             _clusterConfig = section.AkkaConfig;
-            LaunchBackend(new[] { "2551" });
-            LaunchBackend(new[] { "2552" });
+       //     LaunchBackend(new[] { "2551" });
+            LaunchBackend(new[] { "2556" });
             LaunchBackend(new string[0]);
 
             string input;
@@ -56,12 +56,10 @@ namespace GroupRouterSystem
             var config =
                     ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + 0)
                         .WithFallback(_clusterConfig);
-
-            //var system = ActorSystem.Create("GroupRouterSystem", config);
             
             if (_testCoordinator != null)
             {
-                _testCoordinator.Tell(new Message("this is a message from send to backend", Guid.NewGuid()));
+                _testCoordinator.Tell(new Message("this is a message from send to backend from system 2", Guid.NewGuid()));
                 Console.WriteLine("path " + _testCoordinator.Path);
             }
         }
@@ -75,33 +73,33 @@ namespace GroupRouterSystem
             var system = ActorSystem.Create("GroupRouterSystem", config);
 
             // Create Coordinator Actor that will supervise risky child (Character Actor) actor's
-            var actor = system.ActorOf(Props.Create(() => new CoordinatorActor()), "testcoordinator");
+            //var actor = system.ActorOf(Props.Create(() => new CoordinatorActor()), "testcoordinator");
 
-            //// Send some messages to get gossip going
-            actor.Tell(new Message("test", Guid.NewGuid()));
-            actor.Tell(new Message("test", Guid.NewGuid()));
-            actor.Tell(new Message("test", Guid.NewGuid()));
-            actor.Tell(new Message("test", Guid.NewGuid()));
+            ////// Send some messages to get gossip going
+            //actor.Tell(new Message("test 2", Guid.NewGuid()));
+            //actor.Tell(new Message("test 2", Guid.NewGuid()));
+            //actor.Tell(new Message("test 2", Guid.NewGuid()));
+            //actor.Tell(new Message("test 2", Guid.NewGuid()));
 
             if (_testCoordinator == null)
             {
-                var workers = new[] { "/user/testcoordinator" };
                 // WORKING config from code
-                // WORKING _testCoordinator = system.ActorOf(Props.Empty.WithRouter(new RandomGroup(workers)), "test-group");
-
+                //var workers = new[] { "/user/testcoordinator" };
+                //WORKING _testCoordinator = system.ActorOf(Props.Empty.WithRouter(new RandomGroup(workers)), "test-group");
+                
                 // hocon config
                 _testCoordinator = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "test-group");
                 Console.WriteLine("path " + _testCoordinator.Path);
                 // Method #1 As found on http://getakka.net/docs/working-with-actors/Routers in ConsistentHashingGroup section of this page
-                //   _testCoordinator = system.ActorOf(Props.Create(() => new CoordinatorActor()).WithRouter(FromConfig.Instance), "testcoordinator");
+             //   _testCoordinator = system.ActorOf(Props.Create(() => new CoordinatorActor()).WithRouter(FromConfig.Instance), "testcoordinator");
                 //_testCoordinator = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "testgroup");
                 //_testCoordinator = system.ActorOf(Props.Empty.WithRouter(new RandomGroup("/user/testcoordinator")), "testcoordinator");
             }
 
-            actor.Tell(new Message("warmup the system and get some gossip going 1", Guid.NewGuid()));
-            actor.Tell(new Message("warmup the system and get some gossip going 1", Guid.NewGuid()));
-            actor.Tell(new Message("warmup the system and get some gossip going 1", Guid.NewGuid()));
-            actor.Tell(new Message("warmup the system and get some gossip going 1", Guid.NewGuid()));
+            //actor.Tell(new Message("warmup the system and get some gossip going 2", Guid.NewGuid()));
+            //actor.Tell(new Message("warmup the system and get some gossip going 2", Guid.NewGuid()));
+            //actor.Tell(new Message("warmup the system and get some gossip going 2", Guid.NewGuid()));
+            //actor.Tell(new Message("warmup the system and get some gossip going 2", Guid.NewGuid()));
         }
     }
 }
