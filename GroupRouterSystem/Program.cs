@@ -91,6 +91,7 @@ namespace GroupRouterSystem
 
                 // hocon config
                 _testCoordinator = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "test-group");
+                
                 Console.WriteLine("path " + _testCoordinator.Path);
                 // Method #1 As found on http://getakka.net/docs/working-with-actors/Routers in ConsistentHashingGroup section of this page
                 //   _testCoordinator = system.ActorOf(Props.Create(() => new CoordinatorActor()).WithRouter(FromConfig.Instance), "testcoordinator");

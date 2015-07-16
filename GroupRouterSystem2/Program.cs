@@ -1,4 +1,5 @@
-﻿using Actors.Actors.SupervisorStrategyPattern;
+﻿using System.Linq;
+using Actors.Actors.SupervisorStrategyPattern;
 using Akka.Actor;
 using Akka.Configuration;
 using Akka.Configuration.Hocon;
@@ -20,8 +21,8 @@ namespace GroupRouterSystem
             var section = (AkkaConfigurationSection)ConfigurationManager.GetSection("akka");
             _clusterConfig = section.AkkaConfig;
        //     LaunchBackend(new[] { "2551" });
-            LaunchBackend(new[] { "2556" });
-            LaunchBackend(new string[0]);
+            LaunchBackend(new[] { "2551" });
+           // LaunchBackend(new string[0]);
 
             string input;
 
@@ -59,6 +60,9 @@ namespace GroupRouterSystem
             
             if (_testCoordinator != null)
             {
+                var routees = _testCoordinator.Ask<Routees>(new GetRoutees());
+                Console.WriteLine("has routees" + routees.Result.Members.Any());
+
                 _testCoordinator.Tell(new Message("this is a message from send to backend from system 2", Guid.NewGuid()));
                 Console.WriteLine("path " + _testCoordinator.Path);
             }
@@ -68,7 +72,7 @@ namespace GroupRouterSystem
         {
             var port = args.Length > 0 ? args[0] : "0";
 
-            var config = ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + port).WithFallback(_clusterConfig);
+            var config = ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + 0).WithFallback(_clusterConfig);
             
             var system = ActorSystem.Create("GroupRouterSystem", config);
 
