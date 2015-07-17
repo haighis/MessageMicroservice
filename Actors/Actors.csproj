@@ -70,9 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\CommandProcessor.cs" />
-    <Compile Include="Actors\IMessageCommand.cs" />
-    <Compile Include="Actors\RemoteJobActor.cs" />
     <Compile Include="Actors\SupervisorStrategyPattern\ChildActor.cs" />
     <Compile Include="Actors\SupervisorStrategyPattern\CoordinatorActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,6 +87,10 @@
     <Content Include="licenses\protoc-license.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessService\BusinessLogic.csproj">
+      <Project>{1a4664db-6cc5-4f6f-a1cb-c0b021fc91b8}</Project>
+      <Name>BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataModel\DataModel.csproj">
       <Project>{1de7e86b-3c82-4d59-873b-3ae785130e19}</Project>
       <Name>DataModel</Name>

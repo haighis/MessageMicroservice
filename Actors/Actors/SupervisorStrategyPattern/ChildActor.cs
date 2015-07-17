@@ -1,5 +1,6 @@
 ﻿using System;
 using Akka.Actor;
+using BusinessLogic;
 using DataModel;
 
 namespace Actors.Actors.SupervisorStrategyPattern
@@ -9,10 +10,16 @@ namespace Actors.Actors.SupervisorStrategyPattern
     /// </summary>
     public class ChildActor : ReceiveActor
     {
+        private IMessageBusinessLogic messageBusinessLogic;
+
         public ChildActor()
         {
             Receive<Message>(msg =>
             {
+                messageBusinessLogic = new MessageBusinessLogic();
+
+                messageBusinessLogic.AddTodo(msg.Data);
+
                 Console.WriteLine("Child Actr path " + Self.Path);
                 Console.WriteLine(msg.Data);
                 // INSERT TO A DATABASE OR SEND AN EMAIL

@@ -54,10 +54,6 @@ namespace GroupRouterSystem
         /// </summary>
         private static void SendToBackend()
         {
-            var config =
-                    ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + 0)
-                        .WithFallback(_clusterConfig);
-            
             if (_testCoordinator != null)
             {
                 var routees = _testCoordinator.Ask<Routees>(new GetRoutees());

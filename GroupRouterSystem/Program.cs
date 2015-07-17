@@ -53,12 +53,6 @@ namespace GroupRouterSystem
         /// </summary>
         private static void SendToBackend()
         {
-            var config =
-                    ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + 0)
-                        .WithFallback(_clusterConfig);
-
-            //var system = ActorSystem.Create("GroupRouterSystem", config);
-            
             if (_testCoordinator != null)
             {
                 _testCoordinator.Tell(new Message("this is a message from send to backend", Guid.NewGuid()));
