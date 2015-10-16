@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Actors.Actors.SupervisorStrategyPattern;
 using Akka.Actor;
 using Akka.Configuration;
 using Akka.Configuration.Hocon;

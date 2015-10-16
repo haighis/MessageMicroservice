@@ -1,4 +1,5 @@
-﻿using Actors.Actors.SupervisorStrategyPattern;
+﻿using Actors.Actors.DoesRecordExistDatabase;
+using Actors.Actors.SupervisorStrategyPattern;
 using Akka.Actor;
 using Akka.Configuration;
 using Akka.Configuration.Hocon;
@@ -11,9 +12,9 @@ namespace GroupRouterSystem
 {
     internal class Program
     {
-
         private static Config _clusterConfig;
         private static IActorRef _testCoordinator;
+        private static IActorRef _dbRecordExistActor;
 
         private static void Main(string[] args)
         {
@@ -37,7 +38,6 @@ namespace GroupRouterSystem
                     case "send":
                         // Send to backend which will write to the console
                         SendToBackend();
-
                         break;
                 }
             }
@@ -53,10 +53,15 @@ namespace GroupRouterSystem
         /// </summary>
         private static void SendToBackend()
         {
-            if (_testCoordinator != null)
+            //if (_testCoordinator != null)
+            //{
+            //    _testCoordinator.Tell(new Message("this is a message from send to backend", Guid.NewGuid()));
+            //    Console.WriteLine("path " + _testCoordinator.Path);
+            //}
+            if (_dbRecordExistActor != null)
             {
-                _testCoordinator.Tell(new Message("this is a message from send to backend", Guid.NewGuid()));
-                Console.WriteLine("path " + _testCoordinator.Path);
+                var a = _dbRecordExistActor.Ask<string>(new Message("this is a message from send to backend", Guid.NewGuid()));
+                Console.WriteLine(" in send to backend" + a.Result);
             }
         }
 
@@ -71,26 +76,27 @@ namespace GroupRouterSystem
             // Create Coordinator Actor that will supervise risky child (Character Actor) actor's
             var actor = system.ActorOf(Props.Create(() => new CoordinatorActor()), "testcoordinator");
 
+            var dbRecordExistsActor = system.ActorOf(Props.Create(() => new DbRecordExistsActor()), "dbrecordexist");
+
             //// Send some messages to get gossip going
             actor.Tell(new Message("test", Guid.NewGuid()));
             actor.Tell(new Message("test", Guid.NewGuid()));
-            actor.Tell(new Message("test", Guid.NewGuid()));
-            actor.Tell(new Message("test", Guid.NewGuid()));
+            //var a = dbRecordExistsActor.Ask(new Message("test", Guid.NewGuid()));
+            //var b = dbRecordExistsActor.Ask(new Message("test", Guid.NewGuid()));
+
+            if (_dbRecordExistActor == null)
+            {
+                // hocon config
+                _dbRecordExistActor = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "dbrecordexist-group");
+                Console.WriteLine("_dbRecordExistActor " + _dbRecordExistActor.Path);
+            }
 
             if (_testCoordinator == null)
             {
-                var workers = new[] { "/user/testcoordinator" };
-                // WORKING config from code
-                // WORKING _testCoordinator = system.ActorOf(Props.Empty.WithRouter(new RandomGroup(workers)), "test-group");
-
                 // hocon config
                 _testCoordinator = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "test-group");
-                
+
                 Console.WriteLine("path " + _testCoordinator.Path);
-                // Method #1 As found on http://getakka.net/docs/working-with-actors/Routers in ConsistentHashingGroup section of this page
-                //   _testCoordinator = system.ActorOf(Props.Create(() => new CoordinatorActor()).WithRouter(FromConfig.Instance), "testcoordinator");
-                //_testCoordinator = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "testgroup");
-                //_testCoordinator = system.ActorOf(Props.Empty.WithRouter(new RandomGroup("/user/testcoordinator")), "testcoordinator");
             }
 
             actor.Tell(new Message("warmup the system and get some gossip going 1", Guid.NewGuid()));
@@ -100,22 +106,3 @@ namespace GroupRouterSystem
         }
     }
 }
-
-
-// var props = Props.Create<CoordinatorActor>().WithRouter(FromConfig.Instance);
-// _testCoordinator = system.ActorOf(props, "todocoordinator");
-
-//_testCoordinator = system.ActorOf(Props.Empty.WithRouter(new ConsistentHashingGroup("/user/testcoordinator")), "testcoordinator");
-
-//_testCoordinator = system.ActorOf(Props.Create(() => new CoordinatorActor()).WithRouter(FromConfig.Instance), "testcoordinator");
-
-//Console.WriteLine("path " + _testCoordinator.Path);
-
-// Configure in code without hocon
-//if (_testCoordinator == null)
-//{
-//    _testCoordinator = system.ActorOf(Props.Create(() => new CoordinatorActor()).WithRouter(
-//    new ClusterRouterGroup(new ConsistentHashingGroup("/user/testcoordinator"),
-//            new ClusterRouterGroupSettings(10, true, "program", ImmutableHashSet.Create("/user/testcoordinator"))
-//                                )), "testcoordinator");
-//}

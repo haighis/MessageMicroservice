@@ -70,8 +70,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\SupervisorStrategyPattern\ChildActor.cs" />
-    <Compile Include="Actors\SupervisorStrategyPattern\CoordinatorActor.cs" />
+    <Compile Include="Actors\DoesRecordExistDatabase\DbRecordExistsActor.cs" />
+    <Compile Include="Actors\SupervisorStrategyPattern\ChildActor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actors\SupervisorStrategyPattern\CoordinatorActor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

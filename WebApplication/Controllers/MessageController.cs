@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Akka.Actor;
@@ -25,7 +26,7 @@ namespace WebApplication.Controllers
         }
 
         // GET: Todo/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             ViewBag.Title = "Create Todo";
             return View();

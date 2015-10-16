@@ -25,20 +25,14 @@ namespace WebApplication
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //var section = (AkkaConfigurationSection)ConfigurationManager.GetSection("akka");
-
-            //var _clusterConfig = section.AkkaConfig;
-
-            //var config = ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + 0).WithFallback(_clusterConfig);
-
             var system = ActorSystem.Create("GroupRouterSystem");
-
             var actor = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "test-group");
+            var dbRecordExistActor = system.ActorOf(Props.Empty.WithRouter(FromConfig.Instance), "dbrecordexist-group");
 
             actor.Tell(new Message("test from startup", Guid.NewGuid()));
 
             SystemActors.TodoCoordinator = actor;
-
+            SystemActors.DoesDbRecordExistActor = dbRecordExistActor;
         }
     }
 }
